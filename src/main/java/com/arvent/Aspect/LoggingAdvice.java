@@ -66,7 +66,7 @@ public class LoggingAdvice {
         return result;
     }
 
-    @AfterThrowing(pointcut = "execution(* com.arvent.Controller.CustomerController.getCustomerInfo())", throwing = "ex")
+    @AfterThrowing(pointcut = "execution(* com.arvent.Service.CustomerService.findCustomerById())", throwing = "ex")
     public void logAfterThrowingAllMethods(CustomerNotFoundException ex) throws Throwable {
         log.info("****LoggingAspect.logAfterThrowingAllMethods() " + ex);
     }
