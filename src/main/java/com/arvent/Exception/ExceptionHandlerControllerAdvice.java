@@ -1,5 +1,5 @@
 package com.arvent.Exception;
-
+/*
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice
+//@ControllerAdvice
 public class ExceptionHandlerControllerAdvice {
 
+    //@ExceptionHandler({ CustomException1.class, CustomException2.class })
     @ExceptionHandler(CustomerNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public @ResponseBody
@@ -36,4 +37,4 @@ public class ExceptionHandlerControllerAdvice {
         return error;
     }
 
-}
+} */

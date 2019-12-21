@@ -2,6 +2,7 @@ package com.arvent.Controller;
 
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.Entity.Customer;
+import com.arvent.Exception.CustomerNotFoundException;
 import com.arvent.Exception.CustomerServiceException;
 import com.arvent.Exception.ResourcesNotFoundException;
 import com.arvent.Service.CustomerService;
@@ -40,6 +41,7 @@ public class CustomerController {
     public ResponseEntity createCustomer(
             @ApiParam(value = "Customer object store into database")
             @Valid @RequestBody CustomerDTO customer) {
+
         String hashed = BCrypt.hashpw(customer.getPassword(), BCrypt.gensalt(12));
         customer.setPassword(hashed);
         Customer builtCustomer = customerService.customerBuilder(customer);
@@ -62,15 +64,12 @@ public class CustomerController {
             @RequestHeader(value="User-Agent", defaultValue="foo")String userAgent
             //HttpServletResponse response
             )//throws ResourcesNotFoundException, CustomerServiceException
-            throws CustomerServiceException
-    {
+            throws CustomerNotFoundException {
 
 
-            Customer customer = customerService.findCustomerById(id);
-            if (customer == null)
-            {
-                throw new CustomerServiceException("Customer not found: " + id);
-            }
+        Customer customer = customerService.findCustomerById(id);
+
+        return new ResponseEntity<>(customer,HttpStatus.OK);
         //System.out.println(userAgent);
         /*
         try {
@@ -86,7 +85,6 @@ public class CustomerController {
             return new ResponseEntity<>("Error",HttpStatus.NOT_FOUND);
         }
         */
-        return new ResponseEntity<>("Error",HttpStatus.NOT_FOUND);
     }
     @ApiOperation(value = "Update customer")
     @PutMapping("/customers/id/update")

@@ -1,4 +1,4 @@
-package com.arvent.utilities;
+package com.arvent.Utilities;
 
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;

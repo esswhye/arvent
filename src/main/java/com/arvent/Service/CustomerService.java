@@ -2,6 +2,7 @@ package com.arvent.Service;
 
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.Entity.Customer;
+import com.arvent.Exception.CustomerNotFoundException;
 import com.arvent.Exception.CustomerServiceException;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface CustomerService {
 
     Customer customerBuilder(CustomerDTO customerDTO);
 
-    Customer findCustomerById(Long id) ;
+    Customer findCustomerById(Long id) throws CustomerNotFoundException;
 
     void updateCustomer(CustomerDTO customer, Long id);
 

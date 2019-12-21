@@ -2,6 +2,7 @@ package com.arvent.Service.Impl;
 
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.Entity.Customer;
+import com.arvent.Exception.CustomerNotFoundException;
 import com.arvent.Exception.CustomerServiceException;
 import com.arvent.Repository.CustomerRepository;
 import com.arvent.Service.CustomerService;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import com.diffplug.common.base.FieldsAndGetters;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,11 +55,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer findCustomerById(Long id)  {
+    public Customer findCustomerById(Long id) throws CustomerNotFoundException {
 
         Optional<Customer> customer = customerRepository.findById(id);
 
-        return customer.orElse(null);
+        if(customer.isPresent())
+        {
+            return customer.get();
+        }else
+        {
+            throw new CustomerNotFoundException(id);
+        }
+
+       // return customer.orElse(null);
         /*
         if(customer.isPresent()) {
             return customer.get();

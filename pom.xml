@@ -82,12 +82,9 @@
 			<artifactId>cglib</artifactId>
 			<version>3.2.4</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.diffplug.durian/durian -->
 		<dependency>
-			<groupId>com.diffplug.durian</groupId>
-			<artifactId>durian</artifactId>
-			<version>3.3.0</version>
-			<scope>runtime</scope>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.diffplug.durian</groupId>
