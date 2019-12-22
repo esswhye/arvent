@@ -2,15 +2,17 @@ package com.arvent.Service.Impl;
 
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.Entity.Customer;
+import com.arvent.Exception.CustomerExistedException;
 import com.arvent.Exception.CustomerNotFoundException;
-import com.arvent.Exception.CustomerServiceException;
+import com.arvent.Exception.CustomerPasswordException;
 import com.arvent.Repository.CustomerRepository;
 import com.arvent.Service.CustomerService;
 import lombok.AllArgsConstructor;
 import com.diffplug.common.base.FieldsAndGetters;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public void saveCustomer(Customer customer) {
+    public void saveCustomer(Customer customer) throws CustomerExistedException{
+
+        List<Customer> customerList = findAllCustomer();
+
+         if(customerList.stream()
+             .anyMatch(t -> t.getUserName().equals(customer.getUserName())))
+         {
+             throw new CustomerExistedException(customer.getUserName());
+         }
 
         customerRepository.save(customer);
         System.out.println("customer saved");
@@ -76,9 +86,40 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomer(CustomerDTO customer, Long id) {
+    public void updateCustomer(CustomerDTO customer, Long id, String password)throws CustomerPasswordException, IllegalAccessException{
+
         Customer builtCustomer = customerBuilder(customer);
-        builtCustomer = customerSetOldField(builtCustomer);
+
+        Customer existedCustomerDetail = customerRepository.findById(id).get();
+
+        if (BCrypt.checkpw(password, existedCustomerDetail.getPassword())) {
+            System.out.println("It matches");
+            //Field[] fields = builtCustomer.getClass().getDeclaredFields();
+            Field[] fieldsExisted = existedCustomerDetail.getClass().getDeclaredFields();
+            for(Field field : builtCustomer.getClass().getDeclaredFields()){
+                field.setAccessible(true);
+                Object value = field.get(builtCustomer);
+                System.out.println(field.getName()+ " "+value);
+                if(value!=null)
+                {
+                    for(Field fieldExisted: fieldsExisted)
+                    {
+                        fieldExisted.setAccessible(true);
+                        //Object existedValue = field.get(existedCustomerDetail);
+                        if(field.getName().equals("password"))
+                        {
+                            field.set(existedCustomerDetail,customerEncryptPassword(value.toString()));
+                        }else {
+                            field.set(existedCustomerDetail, value);
+                        }
+                    }
+                }
+            }
+            System.out.println(existedCustomerDetail.toString());
+            customerRepository.save(existedCustomerDetail);
+        }
+        else
+            throw new CustomerPasswordException(existedCustomerDetail.getUserName() + " Invalid Password. Please try again!");
 
         /*Customer builtCustomer = customerBuilder(customer);
         try {
@@ -94,17 +135,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer customerSetOldField(Customer customer) {
+    public String customerEncryptPassword(String password)
 
-        FieldsAndGetters.fields(customer)
-                .map(field -> field.getKey().getName() + " = " + field.getValue())
-                .forEach(System.out::println);
-
-
-
-            return null;
-
-
+    {
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        return hashed;
     }
 
 

@@ -2,9 +2,7 @@ package com.arvent.Controller;
 
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.Entity.Customer;
-import com.arvent.Exception.CustomerNotFoundException;
-import com.arvent.Exception.CustomerServiceException;
-import com.arvent.Exception.ResourcesNotFoundException;
+import com.arvent.Exception.*;
 import com.arvent.Service.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,10 +38,9 @@ public class CustomerController {
     @PostMapping("/customers/create")
     public ResponseEntity createCustomer(
             @ApiParam(value = "Customer object store into database")
-            @Valid @RequestBody CustomerDTO customer) {
+            @Valid @RequestBody CustomerDTO customer) throws CustomerExistedException {
 
-        String hashed = BCrypt.hashpw(customer.getPassword(), BCrypt.gensalt(12));
-        customer.setPassword(hashed);
+        customer.setPassword(customerService.customerEncryptPassword(customer.getPassword()));
         Customer builtCustomer = customerService.customerBuilder(customer);
         customerService.saveCustomer(builtCustomer);
         return new ResponseEntity<>("Customer saved", HttpStatus.OK);
@@ -90,9 +87,10 @@ public class CustomerController {
     @PutMapping("/customers/id/update")
     public ResponseEntity changeCustomerDetails(
             @RequestHeader(value = "id") Long id,
-            @Valid @RequestBody CustomerDTO customer)
+            @RequestHeader(value = "password") String password,
+            @Valid @RequestBody CustomerDTO customer) throws CustomerPasswordException, IllegalAccessException
     {
-        customerService.updateCustomer(customer,id);
+        customerService.updateCustomer(customer,id,password);
         return new ResponseEntity<>("Customer saved", HttpStatus.OK);
     }
 

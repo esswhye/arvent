@@ -1,0 +1,1 @@
+ALTER TABLE customers ADD CONSTRAINT U_userName UNIQUE(user_name)
