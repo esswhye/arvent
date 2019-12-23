@@ -26,7 +26,7 @@ public class LoggingAdvice {
 
     //@Around("execution(* com.arvert.Service..*(..)))")
     @Around("myPointCut()")
-    public Object applicationLogger(ProceedingJoinPoint pjp) throws Throwable {
+    public Object applicationControllerLogger(ProceedingJoinPoint pjp) throws Throwable {
         ObjectMapper mapper = new ObjectMapper();
         String methodName = pjp.getSignature().getName();
         String className = pjp.getTarget().getClass().toString();
@@ -39,13 +39,29 @@ public class LoggingAdvice {
 
         log.info("Method Invoked " + className + ": " + methodName + "()" + " arguments :" + mapper.writeValueAsString(array));
         Object object = pjp.proceed();
+
         log.info(className + ": " + methodName + "()" + " Response :" + mapper.writeValueAsString(object));
         return object;
     }
 
+    @Around("execution(* com.arvent.Service.*..*(..))")
+    public Object applicationServiceLogger(ProceedingJoinPoint pjp) throws Throwable {
+        ObjectMapper mapper = new ObjectMapper();
+        String methodName = pjp.getSignature().getName();
+        String className = pjp.getTarget().getClass().toString();
+        Object[] array = pjp.getArgs();
+
+        log.info("Method Invoked " + className + ": " + methodName + "()");
+        Object object = pjp.proceed();
+        log.info(className + ": " + methodName + "()" + " Response :" + mapper.writeValueAsString(object));
+        return object;
+    }
+
+
     //AOP expression for which methods shall be intercepted
-    @Around("execution(* com.arvent.*..*(..))")
+    //@Around("execution(* com.arvent.*..*(..))")
     //@Around("execution(* com.arvert.Service..*(..)))")
+    @Around("myPointCut()")
     public Object profileAllMethods(ProceedingJoinPoint pjp) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
 
@@ -66,9 +82,10 @@ public class LoggingAdvice {
         return result;
     }
 
-    @AfterThrowing(pointcut = "execution(* com.arvent.Service.CustomerService.findCustomerById())", throwing = "ex")
-    public void logAfterThrowingAllMethods(CustomerNotFoundException ex) throws Throwable {
-        log.info("****LoggingAspect.logAfterThrowingAllMethods() " + ex);
+    //@AfterThrowing(pointcut = "execution(* com.arvent.*..*(..))", throwing = "ex")
+    @AfterThrowing(pointcut = "execution(* com.arvent.Controller..*(..))", throwing = "ex")
+    public void logAfterThrowingAllMethods(Exception ex) throws Throwable {
+        log.info("LoggingAspect.logAfterThrowingAllMethods() " + ex);
     }
 }
 

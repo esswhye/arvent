@@ -1,6 +1,7 @@
 package com.arvent.Service;
 
 import com.arvent.DTO.CustomerDTO;
+import com.arvent.DTO.UpdateCustomerDTO;
 import com.arvent.Entity.Customer;
 import com.arvent.Exception.CustomerExistedException;
 import com.arvent.Exception.CustomerNotFoundException;
@@ -19,7 +20,7 @@ public interface CustomerService {
 
     Customer findCustomerById(Long id) throws CustomerNotFoundException;
 
-    void updateCustomer(CustomerDTO customer, Long id, String password) throws CustomerPasswordException, IllegalAccessException;
+    void updateCustomer(UpdateCustomerDTO customer, Long id, String password) throws CustomerPasswordException, IllegalAccessException, CustomerNotFoundException;
 
     String customerEncryptPassword(String password);
 }

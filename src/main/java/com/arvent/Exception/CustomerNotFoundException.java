@@ -1,11 +1,11 @@
 package com.arvent.Exception;
 
-public class CustomerNotFoundException extends ArventException {
+public class CustomerNotFoundException extends ArventException{
 
     public CustomerNotFoundException() {
     }
 
     public CustomerNotFoundException( Long id) {
-        super("Error " + id + " not found");
+        super("Error Customer id: " + id + " not found");
     }
 }

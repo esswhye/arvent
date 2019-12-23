@@ -1,6 +1,7 @@
 package com.arvent.Service.Impl;
 
 import com.arvent.DTO.CustomerDTO;
+import com.arvent.DTO.UpdateCustomerDTO;
 import com.arvent.Entity.Customer;
 import com.arvent.Exception.CustomerExistedException;
 import com.arvent.Exception.CustomerNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -40,8 +42,6 @@ public class CustomerServiceImpl implements CustomerService {
          }
 
         customerRepository.save(customer);
-        System.out.println("customer saved");
-        System.out.println(customer);
         /*
         Optional<Customer> customer1 = customerRepository.findById(2L);
 
@@ -62,6 +62,16 @@ public class CustomerServiceImpl implements CustomerService {
                 .password(customerDTO.getPassword())
                 .postalCode(customerDTO.getPostalCode())
                 .userName(customerDTO.getUserName()).build();
+    }
+
+    public Customer customerBuilder(UpdateCustomerDTO customerDTO) {
+        return Customer.builder().address(customerDTO.getAddress())
+                .emailId(customerDTO.getEmailId())
+                .firstName(customerDTO.getFirstName())
+                .lastName(customerDTO.getLastName())
+                .password(customerDTO.getPassword())
+                .postalCode(customerDTO.getPostalCode())
+                .build();
     }
 
     @Override
@@ -86,40 +96,47 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomer(CustomerDTO customer, Long id, String password)throws CustomerPasswordException, IllegalAccessException{
+    public void updateCustomer(UpdateCustomerDTO customer, Long id, String password)throws CustomerPasswordException, IllegalAccessException, CustomerNotFoundException{
 
         Customer builtCustomer = customerBuilder(customer);
 
-        Customer existedCustomerDetail = customerRepository.findById(id).get();
+        try {
+            Customer existedCustomerDetail = customerRepository.findById(id).get();
 
-        if (BCrypt.checkpw(password, existedCustomerDetail.getPassword())) {
-            System.out.println("It matches");
-            //Field[] fields = builtCustomer.getClass().getDeclaredFields();
-            Field[] fieldsExisted = existedCustomerDetail.getClass().getDeclaredFields();
-            for(Field field : builtCustomer.getClass().getDeclaredFields()){
-                field.setAccessible(true);
-                Object value = field.get(builtCustomer);
-                System.out.println(field.getName()+ " "+value);
-                if(value!=null)
-                {
-                    for(Field fieldExisted: fieldsExisted)
+            if (BCrypt.checkpw(password, existedCustomerDetail.getPassword())) {
+                System.out.println("It matches");
+                //Field[] fields = builtCustomer.getClass().getDeclaredFields();
+                Field[] fieldsExisted = existedCustomerDetail.getClass().getDeclaredFields();
+                for(Field field : builtCustomer.getClass().getDeclaredFields()){
+                    field.setAccessible(true);
+                    Object value = field.get(builtCustomer);
+                    System.out.println(field.getName()+ " "+value);
+                    if(value!=null)
                     {
-                        fieldExisted.setAccessible(true);
-                        //Object existedValue = field.get(existedCustomerDetail);
-                        if(field.getName().equals("password"))
+                        for(Field fieldExisted: fieldsExisted)
                         {
-                            field.set(existedCustomerDetail,customerEncryptPassword(value.toString()));
-                        }else {
-                            field.set(existedCustomerDetail, value);
+                            fieldExisted.setAccessible(true);
+                            //Object existedValue = field.get(existedCustomerDetail);
+                            if(field.getName().equals("password"))
+                            {
+                                field.set(existedCustomerDetail,customerEncryptPassword(value.toString()));
+                            }else {
+                                field.set(existedCustomerDetail, value);
+                            }
                         }
                     }
                 }
+                System.out.println(existedCustomerDetail.toString());
+                customerRepository.save(existedCustomerDetail);
             }
-            System.out.println(existedCustomerDetail.toString());
-            customerRepository.save(existedCustomerDetail);
+            else
+                throw new CustomerPasswordException(existedCustomerDetail.getUserName() + " Invalid Password. Please try again!");
+        }catch (NoSuchElementException ex)
+        {
+            throw new CustomerNotFoundException(id);
         }
-        else
-            throw new CustomerPasswordException(existedCustomerDetail.getUserName() + " Invalid Password. Please try again!");
+
+
 
         /*Customer builtCustomer = customerBuilder(customer);
         try {

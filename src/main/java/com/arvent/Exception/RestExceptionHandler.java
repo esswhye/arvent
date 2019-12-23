@@ -39,7 +39,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CustomerExistedException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(
+    protected ResponseEntity<Object> handleEntityNotAcceptable(
             CustomerExistedException ex) {
         ApiError apiError = new ApiError(NOT_ACCEPTABLE);
         apiError.setMessage(ex.getMessage());
@@ -47,7 +47,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CustomerPasswordException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(
+    protected ResponseEntity<Object> handleEntityNotAcceptable(
             CustomerPasswordException ex) {
         ApiError apiError = new ApiError(NOT_ACCEPTABLE);
         apiError.setMessage(ex.getMessage());

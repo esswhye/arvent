@@ -1,6 +1,7 @@
 package com.arvent.Controller;
 
 import com.arvent.DTO.CustomerDTO;
+import com.arvent.DTO.UpdateCustomerDTO;
 import com.arvent.Entity.Customer;
 import com.arvent.Exception.*;
 import com.arvent.Service.CustomerService;
@@ -11,13 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
 
 @Api(value = "Customer Management System", description = "Operations pertaining to customer in Customer Management System")
+//@AllArgsConstructor
+//@Slf4j
 @RestController
 @RequestMapping("customer")
 public class CustomerController {
@@ -85,13 +87,12 @@ public class CustomerController {
     }
     @ApiOperation(value = "Update customer")
     @PutMapping("/customers/id/update")
-    public ResponseEntity changeCustomerDetails(
+    public ResponseEntity updateCustomerDetails(
             @RequestHeader(value = "id") Long id,
             @RequestHeader(value = "password") String password,
-            @Valid @RequestBody CustomerDTO customer) throws CustomerPasswordException, IllegalAccessException
-    {
+            @Valid @RequestBody UpdateCustomerDTO customer) throws CustomerPasswordException, IllegalAccessException, CustomerNotFoundException {
         customerService.updateCustomer(customer,id,password);
-        return new ResponseEntity<>("Customer saved", HttpStatus.OK);
+        return new ResponseEntity<>("Customer Updated", HttpStatus.OK);
     }
 
 }
