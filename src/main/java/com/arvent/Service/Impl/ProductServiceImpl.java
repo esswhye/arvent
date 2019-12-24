@@ -8,6 +8,9 @@ import com.arvent.Repository.ProductRepository;
 import com.arvent.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -15,21 +18,16 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    @Autowired
+    final
     ProductHeightWidthRepository productHeightWidthRepository;
+
+    @Autowired
+    public ProductServiceImpl(ProductHeightWidthRepository productHeightWidthRepository) {
+        this.productHeightWidthRepository = productHeightWidthRepository;
+    }
 
     @Override
     public Product productBuilder(ProductDTO productDTO) {
-
-        Product product = Product.builder().productBrand(productDTO.getProductBrand())
-                .productDiscount(productDTO.getProductDiscount())
-                .productHeightWidth(ProductHeightWidth.builder()
-                        .productWidth(productDTO.getProductHeightWidth().getProductWidth())
-                        .productHeight(productDTO.getProductHeightWidth().getProductHeight())
-                        .build())
-                .productImageLink(productDTO.getProductImageLink())
-                .productName(productDTO.getProductName())
-                .productPrice(productDTO.getProductPrice()).build();
 
 
 
@@ -39,10 +37,16 @@ public class ProductServiceImpl implements ProductService {
                 .productName(productDTO.getProductName())
                 .productPrice(productDTO.getProductPrice()).build();
         */
-        return product;
+        return Product.builder().productBrand(productDTO.getProductBrand())
+                .productDiscount(productDTO.getProductDiscount())
+                .productHeightWidth(ProductHeightWidth.builder()
+                        .productWidth(productDTO.getProductHeightWidth().getProductWidth())
+                        .productHeight(productDTO.getProductHeightWidth().getProductHeight())
+                        .build())
+                .productImageLink(productDTO.getProductImageLink())
+                .productName(productDTO.getProductName())
+                .productPrice(productDTO.getProductPrice()).build();
     }
-
-
 
     @Override
     public void saveProduct(Product product) {
@@ -53,12 +57,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductHeightWidth productHeightWidthBuilder(ProductDTO productDTO, Product product) {
 
-        ProductHeightWidth productHeightWidth = ProductHeightWidth.builder().productWidth(productDTO.getProductHeightWidth().getProductWidth())
+        return ProductHeightWidth.builder().productWidth(productDTO.getProductHeightWidth().getProductWidth())
                 .productHeight(productDTO.getProductHeightWidth().getProductHeight())
                 .product(product)
                 .build();
-
-        return productHeightWidth;
     }
 
     @Override
@@ -66,5 +68,14 @@ public class ProductServiceImpl implements ProductService {
 
         productHeightWidthRepository.save(productHeightWidth);
         System.out.println("Product saved" + "\n" + productHeightWidth.toString());
+    }
+
+    @Override
+    @Transactional
+    public void addListProducts(List<Product> productList) {
+
+        Long startId = productRepository.findTopByOrderByIdDesc().getId();
+        productRepository.saveBulkNewProducts(productList);
+        productRepository.saveBulkNewProductsHeightWidth(productList,startId);
     }
 }

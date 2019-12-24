@@ -5,6 +5,9 @@ import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Cglib动态代理是针对类实现代理的
@@ -40,13 +43,16 @@ public class DynamicCglibProxy implements MethodInterceptor {
 
 class TestCglibProxy{
     public static void main(String[] args) {
+        /*
         DynamicCglibProxy dynamicCglibProxy = new DynamicCglibProxy();
         //RrealStar rrealStar = (RrealStar) dynamicCglibProxy.getProxyObj(RrealStar.class);
         //rrealStar.sing();
 
         TestingObject testingObject = (TestingObject) dynamicCglibProxy.getProxyObj(TestingObject.class);
         testingObject.start();
-
-
+*/
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(dtf.format(now));
     }
 }
