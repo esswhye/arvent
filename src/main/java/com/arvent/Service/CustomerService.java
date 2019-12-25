@@ -3,9 +3,9 @@ package com.arvent.Service;
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.DTO.UpdateCustomerDTO;
 import com.arvent.Entity.Customer;
-import com.arvent.Exception.CustomerExistedException;
-import com.arvent.Exception.CustomerNotFoundException;
-import com.arvent.Exception.CustomerPasswordException;
+import com.arvent.Exception.CustomerException.CustomerExistedException;
+import com.arvent.Exception.CustomerException.CustomerNotFoundException;
+import com.arvent.Exception.CustomerException.CustomerPasswordException;
 
 import java.util.List;
 

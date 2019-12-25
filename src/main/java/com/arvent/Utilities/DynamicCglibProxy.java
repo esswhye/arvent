@@ -42,6 +42,7 @@ public class DynamicCglibProxy implements MethodInterceptor {
 }
 
 class TestCglibProxy{
+
     public static void main(String[] args) {
         /*
         DynamicCglibProxy dynamicCglibProxy = new DynamicCglibProxy();
@@ -51,8 +52,24 @@ class TestCglibProxy{
         TestingObject testingObject = (TestingObject) dynamicCglibProxy.getProxyObj(TestingObject.class);
         testingObject.start();
 */
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        System.out.println(dtf.format(now));
+        Human sy = new Human(null);
+        sy.getTest();
+        System.out.println(sy.getTest());
+    }
+}
+
+class Human
+{
+    private String test;
+
+    public Human(String test) {
+        this.test = test;
+    }
+
+    public String getTest() {
+        return test;
+    }
+    public void setTest(String test) {
+        this.test = test;
     }
 }

@@ -3,7 +3,9 @@ package com.arvent.Controller;
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.DTO.UpdateCustomerDTO;
 import com.arvent.Entity.Customer;
-import com.arvent.Exception.*;
+import com.arvent.Exception.CustomerException.CustomerExistedException;
+import com.arvent.Exception.CustomerException.CustomerNotFoundException;
+import com.arvent.Exception.CustomerException.CustomerPasswordException;
 import com.arvent.Service.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,7 +66,6 @@ public class CustomerController {
             //HttpServletResponse response
             )//throws ResourcesNotFoundException, CustomerServiceException
             throws CustomerNotFoundException {
-
 
         Customer customer = customerService.findCustomerById(id);
 

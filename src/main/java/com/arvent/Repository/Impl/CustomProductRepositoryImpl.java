@@ -65,7 +65,7 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
         Long startId = passedStartId;
         StringBuilder queryProductHeightWidths = new StringBuilder();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        queryProductHeightWidths.append("INSERT INTO product_height_width ( product_height, product_width, product_id) values");
+        queryProductHeightWidths.append("INSERT INTO product_height_width ( product_height, product_width, product_id, created_date, last_modified_date) values");
 
         Iterator<Product> productIterator = products.iterator();
 

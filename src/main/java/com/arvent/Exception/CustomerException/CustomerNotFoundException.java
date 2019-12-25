@@ -1,6 +1,8 @@
-package com.arvent.Exception;
+package com.arvent.Exception.CustomerException;
 
-public class CustomerNotFoundException extends ArventException{
+import com.arvent.Exception.ArventException;
+
+public class CustomerNotFoundException extends ArventException {
 
     public CustomerNotFoundException() {
     }

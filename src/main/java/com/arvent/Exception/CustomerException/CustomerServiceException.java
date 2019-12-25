@@ -1,4 +1,4 @@
-package com.arvent.Exception;
+package com.arvent.Exception.CustomerException;
 
 public class CustomerServiceException extends Exception {
 

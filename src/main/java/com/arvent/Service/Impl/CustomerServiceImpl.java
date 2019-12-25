@@ -3,13 +3,12 @@ package com.arvent.Service.Impl;
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.DTO.UpdateCustomerDTO;
 import com.arvent.Entity.Customer;
-import com.arvent.Exception.CustomerExistedException;
-import com.arvent.Exception.CustomerNotFoundException;
-import com.arvent.Exception.CustomerPasswordException;
+import com.arvent.Exception.CustomerException.CustomerExistedException;
+import com.arvent.Exception.CustomerException.CustomerNotFoundException;
+import com.arvent.Exception.CustomerException.CustomerPasswordException;
 import com.arvent.Repository.CustomerRepository;
 import com.arvent.Service.CustomerService;
 import lombok.AllArgsConstructor;
-import com.diffplug.common.base.FieldsAndGetters;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .userName(customerDTO.getUserName()).build();
     }
 
-    public Customer customerBuilder(UpdateCustomerDTO customerDTO) {
+    private Customer customerBuilder(UpdateCustomerDTO customerDTO) {
         return Customer.builder().address(customerDTO.getAddress())
                 .emailId(customerDTO.getEmailId())
                 .firstName(customerDTO.getFirstName())

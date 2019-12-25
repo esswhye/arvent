@@ -3,6 +3,7 @@ package com.arvent.Controller;
 import com.arvent.DTO.ProductDTO;
 import com.arvent.Entity.Product;
 import com.arvent.Entity.ProductHeightWidth;
+import com.arvent.Exception.ProductException.ProductNotFoundException;
 import com.arvent.Service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,10 +11,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -50,9 +48,9 @@ public class ProductController {
         return new ResponseEntity<>("Product saved", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Add a  list product")
-    @PostMapping("/products/createTest")
-    public ResponseEntity addListProduct(@ApiParam(value = "Product object store into database. 1 to 1 relationship mandatory.")
+    @ApiOperation(value = "Add a list product")
+    @PostMapping("/products/addProducts")
+    public ResponseEntity addListProduct(@ApiParam(value = "List of product object store into database. 1 to 1 relationship mandatory.")
                                         @Valid @RequestBody List<ProductDTO> productDTOList)
     {
 
@@ -69,5 +67,26 @@ public class ProductController {
 
         return new ResponseEntity<>("Product saved", HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Get list of products")
+    @GetMapping("/products")
+    public ResponseEntity<List> getListOfProducts()
+    {
+        List<ProductDTO> productDTOList = productService.getAllProducts();
+
+        return new ResponseEntity<>(productDTOList,HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Get a products")
+    @GetMapping("/products/id")
+    public ResponseEntity<Product> getAProducts(@RequestHeader(value = "id") Long id) throws ProductNotFoundException
+    {
+        Product product = productService.findCustomerById(id);
+
+        return new ResponseEntity<>(product,HttpStatus.OK);
+    }
+
+
+
 
 }

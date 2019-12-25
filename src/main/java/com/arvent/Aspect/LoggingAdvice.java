@@ -1,6 +1,5 @@
 package com.arvent.Aspect;
 
-import com.arvent.Exception.CustomerNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
