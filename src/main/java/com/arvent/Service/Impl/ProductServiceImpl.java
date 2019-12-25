@@ -100,7 +100,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO productDTOBuilder(Product product)
     {
-        return ProductDTO.builder().productBrand(product.getProductBrand())
+        if(product.getProductHeightWidth() != null)
+            return ProductDTO.builder().productBrand(product.getProductBrand())
                 .productDiscount(product.getProductDiscount())
                 .productImageLink(product.getProductImageLink())
                 .productName(product.getProductName())
@@ -108,6 +109,13 @@ public class ProductServiceImpl implements ProductService {
                 .productHeightWidth(ProductHeightWidthDTO.builder().productWidth(product.getProductHeightWidth().getProductWidth())
                         .productHeight(product.getProductHeightWidth().getProductHeight()).build())
                 .build();
+        else
+            return ProductDTO.builder().productBrand(product.getProductBrand())
+                    .productDiscount(product.getProductDiscount())
+                    .productImageLink(product.getProductImageLink())
+                    .productName(product.getProductName())
+                    .productPrice(product.getProductPrice())
+                    .build();
     }
 
     @Override
@@ -123,5 +131,17 @@ public class ProductServiceImpl implements ProductService {
         {
             throw new ProductNotFoundException(id);
         }
+    }
+
+    @Override
+    public ProductDTO getProductById(Long id) throws ProductNotFoundException {
+        Optional<Product> productOptional = productRepository.findById(id);
+        Product product;
+        if(productOptional.isPresent())
+            product = productOptional.get();
+        else
+            throw new ProductNotFoundException(id);
+
+        return productDTOBuilder(product);
     }
 }

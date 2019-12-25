@@ -79,11 +79,11 @@ public class ProductController {
 
     @ApiOperation(value = "Get a products")
     @GetMapping("/products/id")
-    public ResponseEntity<Product> getAProducts(@RequestHeader(value = "id") Long id) throws ProductNotFoundException
+    public ResponseEntity<ProductDTO> getAProducts(@RequestHeader(value = "id") Long id) throws ProductNotFoundException
     {
-        Product product = productService.findCustomerById(id);
+        ProductDTO productDTO = productService.getProductById(id);
 
-        return new ResponseEntity<>(product,HttpStatus.OK);
+        return new ResponseEntity<>(productDTO,HttpStatus.OK);
     }
 
 
