@@ -23,7 +23,7 @@ public interface ProductService {
 
     ProductDTO productDTOBuilder(Product product);
 
-    Product findCustomerById(Long id) throws ProductNotFoundException;
+    Product findProductById(Long id) throws ProductNotFoundException;
 
-    ProductDTO getProductById(Long id) throws ProductNotFoundException;
+    Product getProductById(Long id) throws ProductNotFoundException;
 }

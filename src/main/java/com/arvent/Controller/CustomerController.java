@@ -61,8 +61,8 @@ public class CustomerController {
 
     @GetMapping("/customer/id")
     public ResponseEntity getCustomerInfo(
-            @RequestHeader(value = "id") Long id,
-            @RequestHeader(value="User-Agent", defaultValue="foo")String userAgent
+            @RequestHeader(value = "id") Long id
+            //,@RequestHeader(value="User-Agent", defaultValue="foo")String userAgent
             //HttpServletResponse response
             )//throws ResourcesNotFoundException, CustomerServiceException
             throws CustomerNotFoundException {
@@ -73,7 +73,7 @@ public class CustomerController {
         //System.out.println(userAgent);
         /*
         try {
-            Optional<Customer> optionalCustomer = customerService.findCustomerById(id);
+            Optional<Customer> optionalCustomer = customerService.findProductById(id);
             if(optionalCustomer.isPresent())
             {
                 Customer customer = optionalCustomer.get();

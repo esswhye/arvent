@@ -139,7 +139,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         /*Customer builtCustomer = customerBuilder(customer);
         try {
-            Optional<Customer> customerFound = findCustomerById(id);
+            Optional<Customer> customerFound = findProductById(id);
             if(customerFound.isPresent())
             {
                 builtCustomer.setId(id);

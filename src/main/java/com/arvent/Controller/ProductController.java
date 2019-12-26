@@ -81,8 +81,8 @@ public class ProductController {
     @GetMapping("/products/id")
     public ResponseEntity<ProductDTO> getAProducts(@RequestHeader(value = "id") Long id) throws ProductNotFoundException
     {
-        ProductDTO productDTO = productService.getProductById(id);
-
+        Product product = productService.getProductById(id);
+        ProductDTO productDTO = productService.productDTOBuilder(product);
         return new ResponseEntity<>(productDTO,HttpStatus.OK);
     }
 

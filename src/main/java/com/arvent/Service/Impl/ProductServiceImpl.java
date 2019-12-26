@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -119,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findCustomerById(Long id) throws ProductNotFoundException
+    public Product findProductById(Long id) throws ProductNotFoundException
     {
         //Optional<Product> optionalProduct = Optional.of(productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)));
         Optional<Product> optionalProduct = productRepository.findById(id);
@@ -134,14 +133,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductById(Long id) throws ProductNotFoundException {
+    public Product getProductById(Long id) throws ProductNotFoundException {
         Optional<Product> productOptional = productRepository.findById(id);
-        Product product;
         if(productOptional.isPresent())
-            product = productOptional.get();
+            return productOptional.get();
         else
             throw new ProductNotFoundException(id);
 
-        return productDTOBuilder(product);
     }
 }
