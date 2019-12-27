@@ -24,7 +24,7 @@ public class ShoppingCart extends BaseEntity{
     @JoinColumn
     private Customer customer;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @ToString.Exclude
     private Product product;

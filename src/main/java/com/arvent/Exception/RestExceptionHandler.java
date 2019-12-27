@@ -4,6 +4,7 @@ import com.arvent.Exception.CustomerException.CustomerExistedException;
 import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.arvent.Exception.CustomerException.CustomerPasswordException;
 import com.arvent.Exception.ProductException.ProductNotFoundException;
+import com.arvent.Exception.ShoppingCartException.DuplicateItemException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -59,9 +60,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotAcceptable(
+    protected ResponseEntity<Object> handleEntityNotFound(
             ProductNotFoundException ex) {
         ApiError apiError = new ApiError(NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(DuplicateItemException.class)
+    protected ResponseEntity<Object> handleEntityNotAcceptable(
+            DuplicateItemException ex) {
+        ApiError apiError = new ApiError(NOT_ACCEPTABLE);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }

@@ -1,5 +1,6 @@
 package com.arvent.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(callSuper = true)
+@ToString(callSuper = false)
 public class ProductHeightWidth extends BaseEntity{
 
 
@@ -33,6 +34,7 @@ public class ProductHeightWidth extends BaseEntity{
     @JoinColumn
     @MapsId
     @ToString.Exclude
+    @JsonIgnore
     private Product product;
     /*
     public ProductHeightWidth(int productHeight, int productWidth) {
