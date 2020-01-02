@@ -80,6 +80,8 @@ public class ProductServiceImpl implements ProductService {
         //https://dzone.com/articles/java-8-optional-handling-nulls-properly
 
         Optional<Product> product = productRepository.findTopByOrderByIdDesc();
+
+
         productRepository.saveBulkNewProducts(productList);
         //productRepository.saveBulkNewProductsHeightWidth(productList,optionalStartId.isPresent() ? optionalStartId.get() : 0L);
         productRepository.saveBulkNewProductsHeightWidth(productList,product.get().getId());

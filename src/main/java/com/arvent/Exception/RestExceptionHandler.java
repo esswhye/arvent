@@ -23,6 +23,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    //https://objectpartners.com/2014/10/21/logging-rest-exceptions-with-spring/
+
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable (HttpMessageNotReadableException ex , HttpHeaders headers, HttpStatus status, WebRequest webRequest)
     {

@@ -1,5 +1,6 @@
 package com.arvent.Aspect;
 
+import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -18,7 +19,7 @@ import org.springframework.util.StopWatch;
 @Component
 public class LoggingAdvice {
 
-    private Logger log = LoggerFactory.getLogger(LoggingAdvice.class);
+    Logger log = LoggerFactory.getLogger(LoggingAdvice.class);
 
     @Pointcut(value = "execution(* com.arvent.Controller..*(..))")
     public void myPointCut() {
@@ -49,14 +50,12 @@ public class LoggingAdvice {
         ObjectMapper mapper = new ObjectMapper();
         String methodName = pjp.getSignature().getName();
         String className = pjp.getTarget().getClass().toString();
+        Object[] array = pjp.getArgs();
+
         log.info("Method Invoked " + className + ": " + methodName + "()");
         Object object = pjp.proceed();
-        if(object!=null) {
-            log.info(className + ": " + methodName + "()" + " Response :" + mapper.writeValueAsString(object));
-            return object;
-        }else{
-            log.info(className + ": " + methodName + "()" + " Response :" + "Success!");
-        }return null;
+        log.info(className + ": " + methodName + "()" + " Response :" + mapper.writeValueAsString(object));
+        return object;
     }
 
 
@@ -87,7 +86,7 @@ public class LoggingAdvice {
     //@AfterThrowing(pointcut = "execution(* com.arvent.*..*(..))", throwing = "ex")
     @AfterThrowing(pointcut = "execution(* com.arvent.Controller..*(..))", throwing = "ex")
     public void logAfterThrowingAllMethods(Exception ex) throws Throwable {
-        log.error("LoggingAspect.logAfterThrowingAllMethods() " + ex);
+        log.info("LoggingAspect.logAfterThrowingAllMethods() " + ex);
     }
 }
 
