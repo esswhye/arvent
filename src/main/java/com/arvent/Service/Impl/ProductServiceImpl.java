@@ -49,7 +49,9 @@ public class ProductServiceImpl implements ProductService {
                         .build())
                 .productImageLink(productDTO.getProductImageLink())
                 .productName(productDTO.getProductName())
-                .productPrice(productDTO.getProductPrice()).build();
+                .productPrice(productDTO.getProductPrice())
+                .quantity(productDTO.getQuantity())
+                .isAvailable(productDTO.isAvailable()).build();
     }
 
     @Override
@@ -109,6 +111,8 @@ public class ProductServiceImpl implements ProductService {
                 .productPrice(product.getProductPrice())
                 .productHeightWidth(ProductHeightWidthDTO.builder().productWidth(product.getProductHeightWidth().getProductWidth())
                         .productHeight(product.getProductHeightWidth().getProductHeight()).build())
+                    .isAvailable(product.isAvailable())
+                    .quantity(product.getQuantity())
                 .build();
         else
             return ProductDTO.builder().productBrand(product.getProductBrand())
@@ -116,6 +120,8 @@ public class ProductServiceImpl implements ProductService {
                     .productImageLink(product.getProductImageLink())
                     .productName(product.getProductName())
                     .productPrice(product.getProductPrice())
+                    .isAvailable(product.isAvailable())
+                    .quantity(product.getQuantity())
                     .build();
     }
 

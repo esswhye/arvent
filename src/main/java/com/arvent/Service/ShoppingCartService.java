@@ -5,12 +5,15 @@ import com.arvent.Entity.Product;
 import com.arvent.Entity.ShoppingCart;
 import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.arvent.Exception.ShoppingCartException.DuplicateItemException;
+import com.arvent.Exception.ShoppingCartException.OutOfStockException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 public interface ShoppingCartService {
-    ShoppingCart addItemToCart(Customer customer, Product product) throws DuplicateItemException, SQLIntegrityConstraintViolationException;
+    ShoppingCart addItemToCart(Customer customer, Product product, int quantity) throws DuplicateItemException, SQLIntegrityConstraintViolationException, OutOfStockException;
 
     List<Product> getItemList(Long id) throws CustomerNotFoundException;
+
+    List<ShoppingCart> getShoppingCartByCustomerId(Long id) throws CustomerNotFoundException;
 }

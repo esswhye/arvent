@@ -2,7 +2,7 @@ package com.arvent.Entity.Order;
 
 
 import com.arvent.Entity.BaseEntity;
-import com.arvent.Entity.Product;
+import com.arvent.Entity.Customer;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +15,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-    //https://www.baeldung.com/spring-angular-ecommerce
+//https://www.baeldung.com/spring-angular-ecommerce
 @Entity
 @Table(name = "Orders")
 @ApiModel(description = "Customer Order Details")
@@ -30,6 +30,10 @@ public class Order extends BaseEntity {
     @ApiModelProperty(notes = "The database generated order ID")
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name = "customer_ID")
+    private Customer customer;
+
     @Column(name = "current_status", nullable = false)
     private Enum<Status> currentStatus;
 
@@ -39,6 +43,8 @@ public class Order extends BaseEntity {
     private List<OrderItem> orderItemList = new ArrayList<>();
 
     @Column(name = "total_price", nullable = false)
-    private Double totalPrice;
+    private Double totalCost;
 
 }
+
+

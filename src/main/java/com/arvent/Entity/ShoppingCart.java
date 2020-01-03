@@ -32,4 +32,15 @@ public class ShoppingCart extends BaseEntity{
     @Column(name = "is_deleted" , nullable = false)
     private boolean isDeleted;
 
+    private int quantity;
+
+    private double totalCost;
+
+    public ShoppingCart(Customer customer, Product product, boolean isDeleted, int quantity) {
+        this.customer = customer;
+        this.product = product;
+        this.isDeleted = isDeleted;
+        this.quantity = quantity;
+        this.totalCost = quantity*product.getProductPrice();
+    }
 }

@@ -44,6 +44,11 @@ public class Product extends BaseEntity{
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
     private ProductHeightWidth productHeightWidth;
 
+    @Column(nullable = false)
+    private int quantity;
+
+    private boolean isAvailable;
+
     /*
     public Product(String productName, String productBrand, Double productPrice, Double productDiscount, String productImageLink, ProductHeightWidth productHeightWidth) {
         this.productName = productName;

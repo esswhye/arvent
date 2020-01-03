@@ -1,7 +1,6 @@
 package com.arvent.Entity.Order;
 
 import com.arvent.Entity.BaseEntity;
-import com.arvent.Entity.Customer;
 import com.arvent.Entity.Product;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,6 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Entity
@@ -27,9 +29,9 @@ public class OrderItem extends BaseEntity {
     @ApiModelProperty(notes = "The database generated order ID")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "customer_ID")
-    private Customer customer;
+    @ManyToOne
+    @JoinColumn(name = "fk_order")
+    private Order order;
 
     @OneToOne
     private Product product;
@@ -37,16 +39,13 @@ public class OrderItem extends BaseEntity {
     @Column(name = "order_date" , nullable = false)
     private Date orderDate;
 
+    private int quantity;
 
 
-
-}
-
-enum Status {
-    TOPAY,
-    TOSHIP,
-    TORECEIVE,
-    COMPLETED,
-    CANCELLED,
-    RETURNREFUND
+    public OrderItem(Product product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
+        Date date = new Date();
+        this.orderDate = date;
+    }
 }
