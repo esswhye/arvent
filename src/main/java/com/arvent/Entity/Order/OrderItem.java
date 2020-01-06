@@ -2,17 +2,14 @@ package com.arvent.Entity.Order;
 
 import com.arvent.Entity.BaseEntity;
 import com.arvent.Entity.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Entity
@@ -29,23 +26,24 @@ public class OrderItem extends BaseEntity {
     @ApiModelProperty(notes = "The database generated order ID")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_order")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonIgnore
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @OneToOne
     private Product product;
 
-    @Column(name = "order_date" , nullable = false)
-    private Date orderDate;
 
     private int quantity;
 
+    @Column(name = "sub_cost", nullable = false)
+    private Double subCost;
 
     public OrderItem(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
-        Date date = new Date();
-        this.orderDate = date;
     }
 }

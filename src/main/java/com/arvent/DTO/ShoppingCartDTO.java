@@ -13,11 +13,11 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShoppingCartDTO {
 
-    private List<Product> productList;
+    private List<ShoppingCartItemListDTO> itemList;
 
-    private Customer customer;
+    private String customerName;
 
-    private int quantity;
+    private Long customerId;
 
     private double totalCost;
 

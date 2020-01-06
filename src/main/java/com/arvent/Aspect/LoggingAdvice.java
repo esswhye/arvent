@@ -89,4 +89,3 @@ public class LoggingAdvice {
         log.info("LoggingAspect.logAfterThrowingAllMethods() " + ex);
     }
 }
-

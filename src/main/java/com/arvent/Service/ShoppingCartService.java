@@ -1,5 +1,7 @@
 package com.arvent.Service;
 
+import com.arvent.DTO.ShoppingCartDTO;
+import com.arvent.DTO.ShoppingCartItemListDTO;
 import com.arvent.Entity.Customer;
 import com.arvent.Entity.Product;
 import com.arvent.Entity.ShoppingCart;
@@ -16,4 +18,6 @@ public interface ShoppingCartService {
     List<Product> getItemList(Long id) throws CustomerNotFoundException;
 
     List<ShoppingCart> getShoppingCartByCustomerId(Long id) throws CustomerNotFoundException;
+
+    ShoppingCartDTO getItemList2(Long id) throws CustomerNotFoundException;
 }

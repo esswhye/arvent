@@ -48,10 +48,18 @@ public class ShoppingCartController {
 
         List<ShoppingCart> shoppingCartList = shoppingCartService.getShoppingCartByCustomerId(id);
 
-
-
-
         return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
+    }
+
+    @GetMapping("/get2")
+    @ApiOperation(value = "Get Customer's Cart", response = ShoppingCartDTO.class)
+    public ResponseEntity getCustomerCart2(@RequestHeader(value = "id") Long id) throws CustomerNotFoundException{
+
+        //List<Product> cartItem = shoppingCartService.getItemList(id);
+
+        ShoppingCartDTO shoppingCart = shoppingCartService.getItemList2(id);
+
+        return new ResponseEntity<>(shoppingCart, HttpStatus.OK);
     }
 
 

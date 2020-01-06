@@ -7,5 +7,4 @@ public enum Status {
         COMPLETED,
         CANCELLED,
         RETURNREFUND
-
 }

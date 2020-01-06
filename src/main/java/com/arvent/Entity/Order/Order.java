@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 //https://www.baeldung.com/spring-angular-ecommerce
+//https://www.callicoder.com/hibernate-spring-boot-jpa-one-to-many-mapping-example/
 @Entity
 @Table(name = "Orders")
 @ApiModel(description = "Customer Order Details")
@@ -35,11 +36,11 @@ public class Order extends BaseEntity {
     private Customer customer;
 
     @Column(name = "current_status", nullable = false)
-    private Enum<Status> currentStatus;
+    private String currentStatus;
 
-    @OneToMany(mappedBy = "order")
-    @Valid
-    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+            , mappedBy = "order")
     private List<OrderItem> orderItemList = new ArrayList<>();
 
     @Column(name = "total_price", nullable = false)

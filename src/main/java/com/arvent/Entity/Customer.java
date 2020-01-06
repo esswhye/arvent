@@ -1,5 +1,6 @@
 package com.arvent.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -39,6 +40,7 @@ public class Customer extends BaseEntity{
 
     @Column(name = "password", nullable = false)
     @ApiModelProperty(notes = "The customer password")
+    @JsonIgnore
     private String password;
 
     @Column(name = "address", nullable = false)
