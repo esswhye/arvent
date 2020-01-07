@@ -24,6 +24,7 @@ public class OrderController {
     @PostMapping("/create")
     public ResponseEntity createOrder(@RequestBody ShoppingCartDTO shoppingCartDTO) throws OutOfStockException {
 
+        //To do - get product data from database instead
 
         orderService.validateProductExistence(shoppingCartDTO.getItemList());
 

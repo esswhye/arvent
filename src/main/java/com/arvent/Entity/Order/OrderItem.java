@@ -36,7 +36,6 @@ public class OrderItem extends BaseEntity {
     @OneToOne
     private Product product;
 
-
     private int quantity;
 
     @Column(name = "sub_cost", nullable = false)
@@ -46,4 +45,9 @@ public class OrderItem extends BaseEntity {
         this.product = product;
         this.quantity = quantity;
     }
+
+    @Column(name = "purchase_price")
+    private double purchasedPrice;
+
+
 }
