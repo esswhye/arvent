@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping(name = "Order")
@@ -34,6 +36,23 @@ public class OrderController {
 
     }
 
+    @ApiOperation(value = "Create Order")
+    @PostMapping("/create2")
+    public ResponseEntity createOrder2(@RequestHeader("itemIdList")List<Long> itemIdList) throws OutOfStockException {
+
+        //To do - get product data from database instead
+
+        orderService.validateProductExistence2(itemIdList);
+
+
+
+        //orderService.validateProductExistence(shoppingCartDTO.getItemList());
+
+        //orderService.createOrder(shoppingCartDTO);
+
+        return null;
+
+    }
 
     @ApiOperation(value = "Get Order by Order Id")
     @GetMapping("/get")

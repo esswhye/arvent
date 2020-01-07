@@ -19,6 +19,8 @@ public class ArventApplication {
 
 }
 
+//mvn clean package spring-boot:repackage
+//:D
 //cd\JavaProjects\SY_Github\arvent\target
 //java -jar arvent-0.0.1-SNAPSHOT.jar
 //curl -i -X POST http://localhost:8080/actuator/shutdown

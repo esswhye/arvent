@@ -20,4 +20,6 @@ public interface OrderService {
      Order getOrderByOrderId(Long userId);
 
      void deleteOrderByCustomerId(Long orderId);
+
+    void validateProductExistence2(List<Long> itemIdList);
 }

@@ -5,31 +5,32 @@ import com.arvent.DTO.ShoppingCartItemListDTO;
 import com.arvent.Entity.Order.Order;
 import com.arvent.Entity.Order.OrderItem;
 import com.arvent.Entity.Order.Status;
-import com.arvent.Entity.ShoppingCart;
+import com.arvent.Entity.Product;
 import com.arvent.Exception.ShoppingCartException.OutOfStockException;
 import com.arvent.Repository.CustomerRepository;
 import com.arvent.Repository.OrderRepository;
 import com.arvent.Repository.ProductRepository;
+import com.arvent.Repository.ShoppingCartRepository;
 import com.arvent.Service.OrderService;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class OrderServiceImpl implements OrderService
 {
-
-
     private OrderRepository orderRepository;
 
     private ProductRepository productRepository;
 
     private CustomerRepository customerRepository;
+
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public List<Order> getAllOrders() {
@@ -85,5 +86,25 @@ public class OrderServiceImpl implements OrderService
 
         orderRepository.deleteById(orderId);
 
+    }
+
+    @Override
+    public void validateProductExistence2(List<Long> itemIdList) {
+
+        //How to use stream and throw exception
+        Optional<List<Long>> optionalLongList = Optional.ofNullable(itemIdList);
+        List<Product> productList = shoppingCartRepository.getAllCustomerProductByShoppingCartId(optionalLongList);
+        productList.stream().map(t ->
+        {
+            if(!t.isAvailable())
+            {
+                try {
+                    throw new OutOfStockException(t.getId());
+                } catch (OutOfStockException e) {
+                    e.printStackTrace();
+                }
+            }
+            return "Success";
+        });
     }
 }
