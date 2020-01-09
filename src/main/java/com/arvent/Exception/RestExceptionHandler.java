@@ -5,6 +5,7 @@ import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.arvent.Exception.CustomerException.CustomerPasswordException;
 import com.arvent.Exception.ProductException.ProductNotFoundException;
 import com.arvent.Exception.ShoppingCartException.DuplicateItemException;
+import com.arvent.Exception.ShoppingCartException.OutOfStockException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -37,22 +38,22 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError,apiError.getStatus());
     }
 
-    @ExceptionHandler(CustomerNotFoundException.class)
+    @ExceptionHandler({CustomerNotFoundException.class,ProductNotFoundException.class})
     protected ResponseEntity<Object> handleEntityNotFound(
-            CustomerNotFoundException ex) {
+            Exception ex) {
         ApiError apiError = new ApiError(NOT_FOUND);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler({CustomerExistedException.class})
+    @ExceptionHandler({CustomerExistedException.class,CustomerPasswordException.class,DuplicateItemException.class,OutOfStockException.class})
     protected ResponseEntity<Object> handleEntityNotAcceptable(
-            CustomerExistedException ex) {
+            Exception ex) {
         ApiError apiError = new ApiError(NOT_ACCEPTABLE);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }
-
+    /*
     @ExceptionHandler(CustomerPasswordException.class)
     protected ResponseEntity<Object> handleEntityNotAcceptable(
             CustomerPasswordException ex) {
@@ -77,4 +78,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    @ExceptionHandler(OutOfStockException.class)
+    protected ResponseEntity<Object> handleEntityNotAcceptable(
+            OutOfStockException ex) {
+        ApiError apiError = new ApiError(NOT_ACCEPTABLE);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+    */
 }

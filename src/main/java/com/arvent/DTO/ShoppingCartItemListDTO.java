@@ -9,11 +9,11 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShoppingCartItemListDTO {
 
+    private Long orderId;
     private Long productId;
     private String productUrl;
     private String productBrand;
     private double productPrice;
-    private boolean isAvailable;
-    private double subCost;
+    private double subTotal;
     private int quantity;
 }

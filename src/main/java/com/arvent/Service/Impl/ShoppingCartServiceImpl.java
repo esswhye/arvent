@@ -7,11 +7,15 @@ import com.arvent.Entity.Product;
 import com.arvent.Entity.ShoppingCart;
 import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.arvent.Exception.ShoppingCartException.OutOfStockException;
+import com.arvent.Repository.ProductRepository;
 import com.arvent.Repository.ShoppingCartRepository;
 import com.arvent.Service.CustomerService;
+import com.arvent.Service.ProductService;
 import com.arvent.Service.ShoppingCartService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +25,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
-    ShoppingCartRepository shoppingCartRepository;
+    private ShoppingCartRepository shoppingCartRepository;
     private CustomerService customerService;
 
     @Override
-    public ShoppingCart addItemToCart(Customer customer, Product product, int quantity) throws SQLIntegrityConstraintViolationException, OutOfStockException {
+    public ShoppingCart addItemToCart(Customer customer, Product product, int quantity)  {
 
-        if(!product.isAvailable())
-            throw new OutOfStockException(product.getId());
 
-        ShoppingCart shoppingCart = new ShoppingCart(customer, product,false, quantity);
+        ShoppingCart shoppingCart = new ShoppingCart(customer, product, quantity);
         shoppingCartRepository.save(shoppingCart);
         return shoppingCart;
     }
@@ -51,7 +53,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         //List<Product> productList = shoppingCartList.stream().map(t-> t.getProduct()).collect(Collectors.toList());
 
-        Double totalCost = shoppingCartList.stream().mapToDouble(t-> t.getTotalCost()).sum();
+        Double totalCost = 0.0; //= shoppingCartList.stream().mapToDouble(t-> t.getTotalCost()).sum();
 
         List<ShoppingCartItemListDTO> shoppingCartItemListDTOS = new ArrayList<>();
 
@@ -62,11 +64,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     .productId(item.getProduct().getId())
                     .productBrand(item.getProduct().getProductBrand())
                     .productUrl(item.getProduct().getProductImageLink())
-                    .isAvailable(item.getProduct().isAvailable())
                     .quantity(item.getQuantity())
-                    .subCost(item.getQuantity()*item.getProduct().getProductPrice())
+                    .subTotal(item.getQuantity()*item.getProduct().getProductPrice())
                     .productPrice(item.getProduct().getProductPrice())
+                    .orderId(item.getId())
                     .build());
+            totalCost += (item.getQuantity()*item.getProduct().getProductPrice());
         }
         /*
 
@@ -92,6 +95,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .build();
 
         return shoppingCartDTO;
+    }
+
+    @Override
+    @Transactional
+    public void deleteItemsByShoppingCartId(List<ShoppingCartItemListDTO> itemList) {
+        List<Long> itemIdList = itemList.stream().map(t->t.getOrderId()).collect(Collectors.toList());
+        List<ShoppingCart> shoppingCartList = shoppingCartRepository.findAllById(itemIdList);
+        shoppingCartRepository.deleteInBatch(shoppingCartList);
     }
 
     @Override

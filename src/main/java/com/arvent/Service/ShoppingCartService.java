@@ -13,11 +13,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 public interface ShoppingCartService {
-    ShoppingCart addItemToCart(Customer customer, Product product, int quantity) throws DuplicateItemException, SQLIntegrityConstraintViolationException, OutOfStockException;
+    ShoppingCart addItemToCart(Customer customer, Product product, int quantity);
 
     List<Product> getItemList(Long id) throws CustomerNotFoundException;
 
     List<ShoppingCart> getShoppingCartByCustomerId(Long id) throws CustomerNotFoundException;
 
     ShoppingCartDTO getItemList2(Long id) throws CustomerNotFoundException;
+
+    void deleteItemsByShoppingCartId(List<ShoppingCartItemListDTO> itemList);
 }

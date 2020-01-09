@@ -37,7 +37,7 @@ public class Product extends BaseEntity{
     @ApiModelProperty (notes = "The product's Discount")
     private Double productDiscount;
 
-    @Column(name = "product_imagelink")
+    @Column(name = "product_image_link")
     @ApiModelProperty(notes = "Image directory")
     private String productImageLink;
 
@@ -45,9 +45,12 @@ public class Product extends BaseEntity{
     private ProductHeightWidth productHeightWidth;
 
     @Column(nullable = false)
-    private int quantity;
+    private int availableQuantity;
 
-    private boolean isAvailable;
+    @Column(nullable = true)
+    private int blockQuantity;
+
+
 
     /*
     public Product(String productName, String productBrand, Double productPrice, Double productDiscount, String productImageLink, ProductHeightWidth productHeightWidth) {

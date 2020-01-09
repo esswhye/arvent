@@ -7,7 +7,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "shopping_cart")
+@Table(name = "shopping_cart" ,uniqueConstraints={
+        @UniqueConstraint(columnNames = {"customer_id", "product_id"})})
 @ApiModel(description = "Customer's Cart")
 @Data
 @Builder
@@ -21,26 +22,22 @@ public class ShoppingCart extends BaseEntity{
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name ="customer_id")
     private Customer customer;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn
+    @JoinColumn(name = "product_id")
     @ToString.Exclude
     private Product product;
 
-    @Column(name = "is_deleted" , nullable = false)
-    private boolean isDeleted;
-
     private int quantity;
 
-    private double totalCost;
+    //private double totalCost;
 
-    public ShoppingCart(Customer customer, Product product, boolean isDeleted, int quantity) {
+    public ShoppingCart(Customer customer, Product product, int quantity) {
         this.customer = customer;
         this.product = product;
-        this.isDeleted = isDeleted;
         this.quantity = quantity;
-        this.totalCost = quantity*product.getProductPrice();
+        //this.totalCost = quantity*product.getProductPrice();
     }
 }

@@ -1,10 +1,21 @@
 package com.arvent.Entity.Order;
 
 public enum Status {
-        TOPAY,
-        TOSHIP,
-        TORECEIVE,
-        COMPLETED,
-        CANCELLED,
-        RETURNREFUND
+
+        TOPAY("To Pay"),
+        TOSHIP("To Ship"),
+        TORECEIVE("To Receive"),
+        COMPLETED("Completed"),
+        CANCELLED("Cancelled"),
+        RETURNREFUND("Return Refund");
+
+        private String status;
+
+        Status(String status) {
+                this.status = status;
+        }
+
+        public String getStatus() {
+                return status;
+        }
 }

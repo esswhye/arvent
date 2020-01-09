@@ -38,16 +38,17 @@ public class OrderItem extends BaseEntity {
 
     private int quantity;
 
-    @Column(name = "sub_cost", nullable = false)
-    private Double subCost;
+
+    @Column(name = "sub_total", nullable = false)
+    private Double subTotal;
 
     public OrderItem(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }
 
-    @Column(name = "purchase_price")
-    private double purchasedPrice;
+    @Column(name="purchased_product_price")
+    private double purchasedProductPrice;
 
 
 }

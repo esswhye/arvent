@@ -2,6 +2,8 @@ package com.arvent.Controller;
 
 import com.arvent.DTO.ShoppingCartDTO;
 import com.arvent.Entity.Order.Order;
+import com.arvent.Exception.CustomerException.CustomerNotFoundException;
+import com.arvent.Exception.ProductException.ProductNotFoundException;
 import com.arvent.Exception.ShoppingCartException.OutOfStockException;
 import com.arvent.Service.OrderService;
 import io.swagger.annotations.ApiOperation;
@@ -10,11 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @RestController
-@RequestMapping(name = "Order")
+@RequestMapping(name = "order")
 @AllArgsConstructor
 public class OrderController {
 
@@ -24,39 +25,41 @@ public class OrderController {
 
     @ApiOperation(value = "Create Order")
     @PostMapping("/create")
-    public ResponseEntity createOrder(@RequestBody ShoppingCartDTO shoppingCartDTO) throws OutOfStockException {
+    public ResponseEntity createOrder(@RequestBody ShoppingCartDTO shoppingCartDTO) throws OutOfStockException, CustomerNotFoundException, ProductNotFoundException {
 
-        //To do - get product data from database instead
+        /**
+         * UpdateProductQuantity
+         * Payment
+         * Successful
+         * createOrder with status To_Ship - delete shoppingcart item - and  -block quantity add purchasePrice
+         * --------------------------------
+         * Failed
+         * createOrder with status To_Pay expire in 1hour
+         */
 
-        orderService.validateProductExistence(shoppingCartDTO.getItemList());
+        orderService.updateProductQuantityTest(shoppingCartDTO);
 
-        orderService.createOrder(shoppingCartDTO);
+        boolean paymentSuccess = true;
+        //TODO: Payment
+        //PaymentService
+        if(paymentSuccess)
+        {
+            /**
+             * Successful
+             */
+            orderService.createOrder(shoppingCartDTO);
+        }else{
+            //TODO: Failed payment createOrder with status To_Pay expire
+            //Failed
+        }
 
-        return null;
-
-    }
-
-    @ApiOperation(value = "Create Order")
-    @PostMapping("/create2")
-    public ResponseEntity createOrder2(@RequestHeader("itemIdList")List<Long> itemIdList) throws OutOfStockException {
-
-        //To do - get product data from database instead
-
-        orderService.validateProductExistence2(itemIdList);
-
-
-
-        //orderService.validateProductExistence(shoppingCartDTO.getItemList());
-
-        //orderService.createOrder(shoppingCartDTO);
-
-        return null;
+        return new ResponseEntity<>("Purchase Successfully",HttpStatus.OK);
 
     }
 
     @ApiOperation(value = "Get Order by Order Id")
     @GetMapping("/get")
-    public ResponseEntity getOrderByOrderId(@RequestHeader Long orderId) throws OutOfStockException {
+    public ResponseEntity getOrderByOrderId(@RequestHeader Long orderId){
 
 
         Order order = orderService.getOrderByOrderId(orderId);
@@ -67,12 +70,12 @@ public class OrderController {
 
     @ApiOperation(value = "Get Order by Order Id")
     @GetMapping("/delete")
-    public ResponseEntity deleteOrderByCustomerId(@RequestHeader Long orderId)  {
+    public ResponseEntity deleteOrderByCustomerId(@RequestHeader Long orderId){
 
 
         orderService.deleteOrderByCustomerId(orderId);
 
-        return new ResponseEntity<>("Delete Test", HttpStatus.OK);
+        return new ResponseEntity<>("Delete Successfully", HttpStatus.OK);
 
     }
 

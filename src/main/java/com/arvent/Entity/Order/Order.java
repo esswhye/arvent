@@ -23,7 +23,6 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class Order extends BaseEntity {
 
     @Id
@@ -32,7 +31,7 @@ public class Order extends BaseEntity {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "customer_ID")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Column(name = "current_status", nullable = false)
@@ -46,6 +45,15 @@ public class Order extends BaseEntity {
     @Column(name = "total_price", nullable = false)
     private Double totalCost;
 
+    public void addTotalCost(Double cost, int quantity)
+    {
+
+        setTotalCost(getTotalCost()+(cost*quantity));
+    }
+
+    public Order() {
+        this.totalCost=0D;
+    }
 }
 
 

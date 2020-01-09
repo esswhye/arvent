@@ -13,6 +13,7 @@ import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.List;
 
 @Repository
 @Transactional(readOnly = false)
@@ -95,5 +96,13 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
         query.executeUpdate();
 
     }
+/*
+    public void updateProductQuantity(int count, int quantity, List<Long> productIdList)
+    {
+        StringBuilder queryUpdateProductQuantity = new StringBuilder();
 
+
+
+    }
+*/
 }

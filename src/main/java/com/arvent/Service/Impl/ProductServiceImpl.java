@@ -5,6 +5,7 @@ import com.arvent.DTO.ProductHeightWidthDTO;
 import com.arvent.Entity.Product;
 import com.arvent.Entity.ProductHeightWidth;
 import com.arvent.Exception.ProductException.ProductNotFoundException;
+import com.arvent.Exception.ShoppingCartException.OutOfStockException;
 import com.arvent.Repository.ProductHeightWidthRepository;
 import com.arvent.Repository.ProductRepository;
 import com.arvent.Service.ProductService;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -50,8 +49,8 @@ public class ProductServiceImpl implements ProductService {
                 .productImageLink(productDTO.getProductImageLink())
                 .productName(productDTO.getProductName())
                 .productPrice(productDTO.getProductPrice())
-                .quantity(productDTO.getQuantity())
-                .isAvailable(productDTO.isAvailable()).build();
+                .availableQuantity(productDTO.getQuantity())
+                .build();
     }
 
     @Override
@@ -111,8 +110,7 @@ public class ProductServiceImpl implements ProductService {
                 .productPrice(product.getProductPrice())
                 .productHeightWidth(ProductHeightWidthDTO.builder().productWidth(product.getProductHeightWidth().getProductWidth())
                         .productHeight(product.getProductHeightWidth().getProductHeight()).build())
-                    .isAvailable(product.isAvailable())
-                    .quantity(product.getQuantity())
+                    .quantity(product.getAvailableQuantity())
                 .build();
         else
             return ProductDTO.builder().productBrand(product.getProductBrand())
@@ -120,8 +118,7 @@ public class ProductServiceImpl implements ProductService {
                     .productImageLink(product.getProductImageLink())
                     .productName(product.getProductName())
                     .productPrice(product.getProductPrice())
-                    .isAvailable(product.isAvailable())
-                    .quantity(product.getQuantity())
+                    .quantity(product.getAvailableQuantity())
                     .build();
     }
 
@@ -149,4 +146,21 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductNotFoundException(id);
 
     }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public boolean updateProductQuantity(HashMap<Long,Integer> productIdQuantity) throws OutOfStockException {
+        Set<Map.Entry<Long, Integer>> entries = productIdQuantity.entrySet();
+        for (Map.Entry<Long, Integer> entry : entries) {
+            Long key = entry.getKey();
+            Integer value = entry.getValue();
+            int update = productRepository.updateProductQuantity(key,value);
+            if(update < 1)
+            {
+                throw new OutOfStockException(key);
+            }
+        }
+        return true;
+    }
+
 }

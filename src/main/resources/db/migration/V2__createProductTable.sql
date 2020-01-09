@@ -5,8 +5,9 @@ create table products
   product_brand varchar (255),
   product_price float  not null,
   product_discount float ,
-  quantity           int        ,
-  product_imagelink varchar (255),
+  available_quantity           int        ,
+  block_quantity           int        ,
+  product_image_link varchar (255),
   created_date       DATETIME              DEFAULT CURRENT_TIMESTAMP  ,
   last_modified_date DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

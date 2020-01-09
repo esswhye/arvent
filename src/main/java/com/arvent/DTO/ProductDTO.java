@@ -15,7 +15,6 @@ public class ProductDTO {
     private Double productDiscount;
     private String productImageLink;
     private int quantity;
-    private boolean isAvailable;
 
     private ProductHeightWidthDTO productHeightWidth;
 }
