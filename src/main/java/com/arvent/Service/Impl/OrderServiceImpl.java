@@ -6,14 +6,12 @@ import com.arvent.DTO.ShoppingCartItemListDTO;
 import com.arvent.Entity.Order.Order;
 import com.arvent.Entity.Order.OrderItem;
 import com.arvent.Entity.Order.Status;
+import com.arvent.Entity.Product;
 import com.arvent.Entity.ShoppingCart;
 import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.arvent.Exception.ProductException.ProductNotFoundException;
 import com.arvent.Exception.ShoppingCartException.OutOfStockException;
-import com.arvent.Repository.CustomerRepository;
-import com.arvent.Repository.OrderRepository;
-import com.arvent.Repository.ProductRepository;
-import com.arvent.Repository.ShoppingCartRepository;
+import com.arvent.Repository.*;
 import com.arvent.Service.CustomerService;
 import com.arvent.Service.OrderService;
 
@@ -27,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -38,6 +38,8 @@ public class OrderServiceImpl implements OrderService
 
     private CustomerService customerService;
 
+    private OrderItemRepository orderItemRepository;
+
     private ShoppingCartService shoppingCartService;
 
     @Override
@@ -47,7 +49,7 @@ public class OrderServiceImpl implements OrderService
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Order createOrder(ShoppingCartDTO shoppingCartDTO) throws  CustomerNotFoundException, ProductNotFoundException {
 
 
@@ -55,7 +57,7 @@ public class OrderServiceImpl implements OrderService
         List<OrderItem> orderItemList = new ArrayList<>();
 
 
-        order = Order.builder().currentStatus(Status.TOSHIP.getStatus())
+        order = Order.builder().currentStatus(Status.TOPAY.getStatus())
                 .customer(customerService.findCustomerById(shoppingCartDTO.getCustomerId()))
                 .orderItemList(orderItemList).totalCost(0.0).build();
 
@@ -76,7 +78,7 @@ public class OrderServiceImpl implements OrderService
 
         orderRepository.save(order);
 
-        shoppingCartService.deleteItemsByShoppingCartId(shoppingCartDTO.getItemList());
+       // shoppingCartService.deleteItemsByShoppingCartId(shoppingCartDTO.getItemList());
 
 
         return null;
@@ -90,7 +92,16 @@ public class OrderServiceImpl implements OrderService
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void deleteOrderByCustomerId(Long orderId) {
+
+        //Product product = orderRepository.getById(orderId);
+
+        Order order = orderRepository.findById(orderId).get();
+
+        Map<Long,Integer> itemIdQuantity = order.getOrderItemList().stream().collect(Collectors.toMap(t->t.getProduct().getId(), t-> t.getQuantity()));
+
+        productService.updateProductQuantityBack(itemIdQuantity);
 
         orderRepository.deleteById(orderId);
 
@@ -104,11 +115,11 @@ public class OrderServiceImpl implements OrderService
         HashMap<Long,Integer> productIdQuantity = new HashMap<>();
 
         shoppingCartDTO.getItemList().forEach(item ->
-            productIdQuantity.put(item.getProductId(),item.getQuantity())
-        );
+            productIdQuantity.put(item.getProductId(),item.getQuantity()));
 
         productService.updateProductQuantity(productIdQuantity);
 
-
     }
+
+
 }

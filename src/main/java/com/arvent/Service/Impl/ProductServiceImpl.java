@@ -10,6 +10,9 @@ import com.arvent.Repository.ProductHeightWidthRepository;
 import com.arvent.Repository.ProductRepository;
 import com.arvent.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -161,6 +164,25 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public void updateProductQuantityBack(Map<Long, Integer> product) {
+
+        product.forEach((productId,quantity) -> productRepository.updateProductQuantityBack(productId,quantity));
+
+    }
+
+    @Override
+    public Page<ProductDTO> getAllProductsByPage(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
+
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        Page<ProductDTO> productDTOS = productPage.map(this::productDTOBuilder);
+
+        return productDTOS;
     }
 
 }

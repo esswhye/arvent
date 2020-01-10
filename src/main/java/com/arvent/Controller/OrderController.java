@@ -39,20 +39,22 @@ public class OrderController {
 
         orderService.updateProductQuantityTest(shoppingCartDTO);
 
-        boolean paymentSuccess = true;
-        //TODO: Payment
-        //PaymentService
-        if(paymentSuccess)
-        {
-            /**
-             * Successful
-             */
-            orderService.createOrder(shoppingCartDTO);
-        }else{
-            //TODO: Failed payment createOrder with status To_Pay expire
-            //Failed
-        }
+        orderService.createOrder(shoppingCartDTO);
 
+        /*
+        try {
+            orderService.createOrder(shoppingCartDTO);
+        }catch Exception(){
+            //send a msg to mq, worker do it
+        }
+        */
+        boolean paymentSuccess = true;
+        /*
+        if(orderService.paymentCharge())
+        {
+
+        }
+        */
         return new ResponseEntity<>("Purchase Successfully",HttpStatus.OK);
 
     }

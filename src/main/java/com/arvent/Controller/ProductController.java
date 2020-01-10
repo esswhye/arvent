@@ -9,6 +9,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +50,8 @@ public class ProductController {
         return new ResponseEntity<>("Product saved", HttpStatus.OK);
     }
 
+
+
     @ApiOperation(value = "Add a list product")
     @PostMapping("/products/addProducts")
     public ResponseEntity addListProduct(@ApiParam(value = "List of product object store into database. 1 to 1 relationship mandatory.")
@@ -76,6 +80,16 @@ public class ProductController {
 
         return new ResponseEntity<>(productDTOList,HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Get page products")
+    @GetMapping("/productspage")
+    public ResponseEntity getPageOfProducts(@RequestHeader("pageNo") int pageNo, @RequestHeader("pageSize") int pageSize) {
+
+        Page<ProductDTO> productDTOPage = productService.getAllProductsByPage(pageNo,pageSize);
+
+        return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
+    }
+
 
     @ApiOperation(value = "Get a products")
     @GetMapping("/products/id")
