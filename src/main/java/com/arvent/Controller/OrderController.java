@@ -22,7 +22,6 @@ public class OrderController {
     private OrderService orderService;
 
 
-
     @ApiOperation(value = "Create Order")
     @PostMapping("/create")
     public ResponseEntity createOrder(@RequestBody ShoppingCartDTO shoppingCartDTO) throws OutOfStockException, CustomerNotFoundException, ProductNotFoundException {
@@ -38,8 +37,12 @@ public class OrderController {
          */
 
         orderService.updateProductQuantityTest(shoppingCartDTO);
-
-        orderService.createOrder(shoppingCartDTO);
+        //TODO - What if an exception occurred?
+        Order order = orderService.createOrder(shoppingCartDTO);
+        //TODO - Payment Success
+        orderService.changeOrderToShip(order,shoppingCartDTO.getItemList());
+        //TODO - Payment Fail
+        //add expire
 
         /*
         try {

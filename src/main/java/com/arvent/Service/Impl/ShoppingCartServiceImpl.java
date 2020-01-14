@@ -6,17 +6,13 @@ import com.arvent.Entity.Customer;
 import com.arvent.Entity.Product;
 import com.arvent.Entity.ShoppingCart;
 import com.arvent.Exception.CustomerException.CustomerNotFoundException;
-import com.arvent.Exception.ShoppingCartException.OutOfStockException;
-import com.arvent.Repository.ProductRepository;
 import com.arvent.Repository.ShoppingCartRepository;
 import com.arvent.Service.CustomerService;
-import com.arvent.Service.ProductService;
 import com.arvent.Service.ShoppingCartService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +43,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return productList;
     }
 
-    public ShoppingCartDTO getItemList2(Long id) throws CustomerNotFoundException {
+    public ShoppingCartDTO getItemListV2(Long id) throws CustomerNotFoundException {
 
         List<ShoppingCart> shoppingCartList = shoppingCartRepository.findByCustomer(customerService.findCustomerById(id));
 
@@ -67,7 +63,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     .quantity(item.getQuantity())
                     .subTotal(item.getQuantity()*item.getProduct().getProductPrice())
                     .productPrice(item.getProduct().getProductPrice())
-                    .orderId(item.getId())
+                    .cartId(item.getId())
                     .build());
             totalCost += (item.getQuantity()*item.getProduct().getProductPrice());
         }
@@ -100,10 +96,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional
     public void deleteItemsByShoppingCartId(List<ShoppingCartItemListDTO> itemList) {
-        List<Long> itemIdList = itemList.stream().map(t->t.getOrderId()).collect(Collectors.toList());
+        List<Long> itemIdList = itemList.stream().map(t->t.getCartId()).collect(Collectors.toList());
         List<ShoppingCart> shoppingCartList = shoppingCartRepository.findAllById(itemIdList);
         shoppingCartRepository.deleteInBatch(shoppingCartList);
     }
+
+    @Override
+    public void deleteCartByCustomerIdAndProductId(List<Long> cartId) {
+
+        List<ShoppingCart> shoppingCartList = shoppingCartRepository.findAllById(cartId);
+        shoppingCartRepository.deleteInBatch(shoppingCartList);
+    }
+
 
     @Override
     public List<ShoppingCart> getShoppingCartByCustomerId(Long id) throws CustomerNotFoundException {

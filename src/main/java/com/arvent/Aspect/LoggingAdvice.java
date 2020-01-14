@@ -62,6 +62,7 @@ public class LoggingAdvice {
     //AOP expression for which methods shall be intercepted
     //@Around("execution(* com.arvent.*..*(..))")
     //@Around("execution(* com.arvert.Service..*(..)))")
+
     @Around("myPointCut()")
     public Object profileAllMethods(ProceedingJoinPoint pjp) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();

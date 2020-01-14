@@ -19,7 +19,9 @@ public interface ShoppingCartService {
 
     List<ShoppingCart> getShoppingCartByCustomerId(Long id) throws CustomerNotFoundException;
 
-    ShoppingCartDTO getItemList2(Long id) throws CustomerNotFoundException;
+    ShoppingCartDTO getItemListV2(Long id) throws CustomerNotFoundException;
 
     void deleteItemsByShoppingCartId(List<ShoppingCartItemListDTO> itemList);
+
+    void deleteCartByCustomerIdAndProductId(List<Long> cartId);
 }

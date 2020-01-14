@@ -1,13 +1,10 @@
 package com.arvent.Service.Impl;
 
-import com.arvent.DTO.OrderItemDTO;
 import com.arvent.DTO.ShoppingCartDTO;
 import com.arvent.DTO.ShoppingCartItemListDTO;
 import com.arvent.Entity.Order.Order;
 import com.arvent.Entity.Order.OrderItem;
 import com.arvent.Entity.Order.Status;
-import com.arvent.Entity.Product;
-import com.arvent.Entity.ShoppingCart;
 import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.arvent.Exception.ProductException.ProductNotFoundException;
 import com.arvent.Exception.ShoppingCartException.OutOfStockException;
@@ -76,12 +73,15 @@ public class OrderServiceImpl implements OrderService
             order.addTotalCost(orderItem.getProduct().getProductPrice(),item.getQuantity());
         }
 
-        orderRepository.save(order);
-
-       // shoppingCartService.deleteItemsByShoppingCartId(shoppingCartDTO.getItemList());
+         Order orderSaved = orderRepository.save(order);
 
 
-        return null;
+
+        //Remove this after finishing payment
+        //shoppingCartService.deleteItemsByShoppingCartId(shoppingCartDTO.getItemList());
+
+
+        return orderSaved;
 
     }
 
@@ -95,7 +95,7 @@ public class OrderServiceImpl implements OrderService
     @Transactional(rollbackFor = {Exception.class})
     public void deleteOrderByCustomerId(Long orderId) {
 
-        //Product product = orderRepository.getById(orderId);
+        //Product product = orderRepository.getById(cartId);
 
         Order order = orderRepository.findById(orderId).get();
 
@@ -118,6 +118,14 @@ public class OrderServiceImpl implements OrderService
             productIdQuantity.put(item.getProductId(),item.getQuantity()));
 
         productService.updateProductQuantity(productIdQuantity);
+
+    }
+
+    @Override
+    public void changeOrderToShip(Order order, List<ShoppingCartItemListDTO> itemList) {
+
+        order.setCurrentStatus(Status.TOSHIP.getStatus());
+        shoppingCartService.deleteItemsByShoppingCartId(itemList);
 
     }
 

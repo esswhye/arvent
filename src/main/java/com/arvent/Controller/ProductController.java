@@ -100,6 +100,21 @@ public class ProductController {
         return new ResponseEntity<>(productDTO,HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Update a products")
+    @PutMapping("/products/update")
+    public ResponseEntity updateProduct(@RequestBody ProductDTO productDTO) throws ProductNotFoundException
+    {
+
+
+        productService.updateProductDetail(productDTO);
+
+        return new ResponseEntity<>("Update product :" + productDTO.getProductId()+ " successfully",HttpStatus.OK);
+    }
+
+
+
+
+
 
 
 

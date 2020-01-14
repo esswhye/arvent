@@ -9,12 +9,14 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDTO {
 
+    private Long productId;
     private String productName;
     private String productBrand;
     private Double productPrice;
     private Double productDiscount;
     private String productImageLink;
     private int quantity;
+
 
     private ProductHeightWidthDTO productHeightWidth;
 }

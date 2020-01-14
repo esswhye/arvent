@@ -6,6 +6,8 @@ import com.arvent.Exception.CustomerException.CustomerPasswordException;
 import com.arvent.Exception.ProductException.ProductNotFoundException;
 import com.arvent.Exception.ShoppingCartException.DuplicateItemException;
 import com.arvent.Exception.ShoppingCartException.OutOfStockException;
+import com.arvent.Exception.ShoppingCartException.QuantityMoreThanProductQuantity;
+import com.stripe.exception.StripeException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -46,13 +48,23 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler({CustomerExistedException.class,CustomerPasswordException.class,DuplicateItemException.class,OutOfStockException.class})
+    @ExceptionHandler({CustomerExistedException.class,CustomerPasswordException.class,DuplicateItemException.class,OutOfStockException.class, QuantityMoreThanProductQuantity.class})
     protected ResponseEntity<Object> handleEntityNotAcceptable(
             Exception ex) {
         ApiError apiError = new ApiError(NOT_ACCEPTABLE);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }
+
+    @ExceptionHandler({StripeException.class})
+    protected ResponseEntity<Object> handleEntityNotAcceptable(
+            StripeException ex) {
+        ApiError apiError = new ApiError(NOT_ACCEPTABLE);
+        apiError.setMessage(ex.toString());
+        return buildResponseEntity(apiError);
+    }
+
+
     /*
     @ExceptionHandler(CustomerPasswordException.class)
     protected ResponseEntity<Object> handleEntityNotAcceptable(

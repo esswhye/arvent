@@ -47,7 +47,6 @@ public class Order extends BaseEntity {
 
     public void addTotalCost(Double cost, int quantity)
     {
-
         setTotalCost(getTotalCost()+(cost*quantity));
     }
 

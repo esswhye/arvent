@@ -15,6 +15,7 @@ public class ShoppingCartDTO {
 
     private List<ShoppingCartItemListDTO> itemList;
 
+
     private String customerName;
 
     private Long customerId;

@@ -1,6 +1,7 @@
 package com.arvent.Service;
 
 import com.arvent.DTO.ShoppingCartDTO;
+import com.arvent.DTO.ShoppingCartItemListDTO;
 import com.arvent.Entity.Order.Order;
 import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.arvent.Exception.ProductException.ProductNotFoundException;
@@ -21,4 +22,6 @@ public interface OrderService {
 
      @Transactional
      void updateProductQuantityTest(ShoppingCartDTO shoppingCartDTO) throws OutOfStockException;
+
+    void changeOrderToShip(Order order, List<ShoppingCartItemListDTO> itemList);
 }

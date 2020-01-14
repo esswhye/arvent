@@ -9,10 +9,12 @@ import com.arvent.Exception.ShoppingCartException.OutOfStockException;
 import com.arvent.Repository.ProductHeightWidthRepository;
 import com.arvent.Repository.ProductRepository;
 import com.arvent.Service.ProductService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +24,10 @@ import java.util.*;
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private final
     ProductHeightWidthRepository productHeightWidthRepository;
@@ -53,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
                 .productName(productDTO.getProductName())
                 .productPrice(productDTO.getProductPrice())
                 .availableQuantity(productDTO.getQuantity())
+                .blockQuantity(0)
                 .build();
     }
 
@@ -79,16 +85,27 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
+    @Transactional()
     public void addListProducts(List<Product> productList) {
         //https://dzone.com/articles/java-8-optional-handling-nulls-properly
 
-        Optional<Product> product = productRepository.findTopByOrderByIdDesc();
+        productRepository.refreshInformationSchema();
 
+        int nextProductAutoIncrementValue = getNextProductAutoIncrementValue();
 
         productRepository.saveBulkNewProducts(productList);
         //productRepository.saveBulkNewProductsHeightWidth(productList,optionalStartId.isPresent() ? optionalStartId.get() : 0L);
-        productRepository.saveBulkNewProductsHeightWidth(productList,product.get().getId());
+
+        productRepository.saveBulkNewProductsHeightWidth(productList,nextProductAutoIncrementValue);
+
+    }
+
+    private int getNextProductAutoIncrementValue() {
+
+        String sql = "SELECT Auto_increment FROM information_schema.TABLES WHERE TABLE_SCHEMA = \"Eviant\" AND TABLE_NAME = \"products\";";
+
+        return jdbcTemplate.queryForObject(
+                sql, new Object[] {}, Integer.class);
     }
 
     @Override
@@ -106,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO productDTOBuilder(Product product)
     {
         if(product.getProductHeightWidth() != null)
-            return ProductDTO.builder().productBrand(product.getProductBrand())
+            return ProductDTO.builder().productBrand(product.getProductBrand()).productId(product.getId())
                 .productDiscount(product.getProductDiscount())
                 .productImageLink(product.getProductImageLink())
                 .productName(product.getProductName())
@@ -183,6 +200,25 @@ public class ProductServiceImpl implements ProductService {
         Page<ProductDTO> productDTOS = productPage.map(this::productDTOBuilder);
 
         return productDTOS;
+    }
+
+    @Override
+    public void updateProductDetail(ProductDTO productDTO) throws ProductNotFoundException {
+
+        Product product = findProductById(productDTO.getProductId());
+
+        product.setId(productDTO.getProductId());
+        product.getProductHeightWidth().setId(productDTO.getProductId());
+        product.setAvailableQuantity(productDTO.getQuantity());
+        product.setProductBrand(productDTO.getProductBrand());
+        product.setProductDiscount(productDTO.getProductDiscount());
+        product.setProductImageLink(productDTO.getProductImageLink());
+        product.setProductName(productDTO.getProductName());
+        product.setProductPrice(productDTO.getProductPrice());
+        product.getProductHeightWidth().setProductHeight(productDTO.getProductHeightWidth().getProductHeight());
+        product.getProductHeightWidth().setProductWidth(productDTO.getProductHeightWidth().getProductWidth());
+
+        productRepository.save(product);
     }
 
 }

@@ -1,11 +1,14 @@
 package com.arvent.Entity;
 
+import com.arvent.Entity.Order.OrderItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "customers")
@@ -32,7 +35,7 @@ public class Customer extends BaseEntity{
 
     @Column(name = "email", nullable = false)
     @ApiModelProperty(notes = "The customer email id")
-    private String emailId;
+    private String emailAddress;
 
     @Column(name = "user_name", nullable = false)
     @ApiModelProperty(notes = "The customer user name")
@@ -51,4 +54,8 @@ public class Customer extends BaseEntity{
     @ApiModelProperty(notes = "The customer postal code")
     private String postalCode;
 
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+            , mappedBy = "customer")
+    private List<CustomerCreditCard> customerCreditCardList;
 }

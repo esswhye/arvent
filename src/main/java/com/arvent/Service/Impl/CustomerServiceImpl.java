@@ -3,9 +3,11 @@ package com.arvent.Service.Impl;
 import com.arvent.DTO.CustomerDTO;
 import com.arvent.DTO.UpdateCustomerDTO;
 import com.arvent.Entity.Customer;
+import com.arvent.Entity.CustomerCreditCard;
 import com.arvent.Exception.CustomerException.CustomerExistedException;
 import com.arvent.Exception.CustomerException.CustomerNotFoundException;
 import com.arvent.Exception.CustomerException.CustomerPasswordException;
+import com.arvent.Repository.CustomerCreditCardRepository;
 import com.arvent.Repository.CustomerRepository;
 import com.arvent.Service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerRepository customerRepository;
+
+    private CustomerCreditCardRepository customerCreditCardRepository;
 
     @Override
     public List<Customer> findAllCustomer() {
@@ -55,7 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer customerBuilder(CustomerDTO customerDTO) {
         return Customer.builder().address(customerDTO.getAddress())
-                .emailId(customerDTO.getEmailId())
+                .emailAddress(customerDTO.getEmailId())
                 .firstName(customerDTO.getFirstName())
                 .lastName(customerDTO.getLastName())
                 .password(customerDTO.getPassword())
@@ -65,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private Customer customerBuilder(UpdateCustomerDTO customerDTO) {
         return Customer.builder().address(customerDTO.getAddress())
-                .emailId(customerDTO.getEmailId())
+                .emailAddress(customerDTO.getEmailId())
                 .firstName(customerDTO.getFirstName())
                 .lastName(customerDTO.getLastName())
                 .password(customerDTO.getPassword())
@@ -157,6 +161,11 @@ public class CustomerServiceImpl implements CustomerService {
     {
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt(12));
         return hashed;
+    }
+
+    @Override
+    public void createCustomerCreditCard(CustomerCreditCard customerCreditCard) {
+        customerCreditCardRepository.save(customerCreditCard);
     }
 
 

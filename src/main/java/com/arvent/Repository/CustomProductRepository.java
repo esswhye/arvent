@@ -6,5 +6,7 @@ public interface CustomProductRepository {
 
     void saveBulkNewProducts(Iterable<Product> products);
 
-    void saveBulkNewProductsHeightWidth(Iterable<Product> products, Long startId);
+    void saveBulkNewProductsHeightWidth(Iterable<Product> products, int startId);
+
+    void refreshInformationSchema();
 }

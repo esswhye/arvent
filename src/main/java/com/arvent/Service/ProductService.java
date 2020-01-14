@@ -38,4 +38,6 @@ public interface ProductService {
     void updateProductQuantityBack(Map<Long, Integer> product);
 
     Page<ProductDTO> getAllProductsByPage(int pageNo, int pageSize);
+
+    void updateProductDetail(ProductDTO productDTO) throws ProductNotFoundException;
 }

@@ -13,6 +13,8 @@ import java.util.Optional;
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
     List<ShoppingCart> findByCustomer(Customer customer);
+
+    int deleteByProductAndCustomer(Customer customer,Long productId);
     /*
     @Query("select s.product_id from shopping_cart s WHERE s.customer_id IN (:ids)")
     List<Product> getAllCustomerProductByShoppingCartId(List<Long>itemIdList);
