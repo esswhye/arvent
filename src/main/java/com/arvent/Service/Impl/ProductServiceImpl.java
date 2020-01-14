@@ -85,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public void addListProducts(List<Product> productList) {
         //https://dzone.com/articles/java-8-optional-handling-nulls-properly
 
@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.saveBulkNewProducts(productList);
         //productRepository.saveBulkNewProductsHeightWidth(productList,optionalStartId.isPresent() ? optionalStartId.get() : 0L);
-
+        //TODO where to get next auto_increment id - count(max)+1 X
         productRepository.saveBulkNewProductsHeightWidth(productList,nextProductAutoIncrementValue);
 
     }
